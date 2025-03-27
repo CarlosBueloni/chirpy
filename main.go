@@ -7,13 +7,15 @@ import (
 
 func main() {
 	mux := http.NewServeMux()
-	server := http.Server{
-		Handler: mux,
-		Addr:    ":8080",
-	}
-	err := server.ListenAndServe()
-	if err != nil {
-		log.Fatalf("Error initializing server %v", err)
-	}
+	port := "8080"
+	filepathRoot := "."
 
+	server := http.Server{
+		Addr:    ":" + port,
+		Handler: mux,
+	}
+	mux.Handle("/", http.FileServer(http.Dir(filepathRoot)))
+
+	log.Printf("Serving files from %s on port: %s\n", filepathRoot, port)
+	log.Fatal(server.ListenAndServe())
 }
