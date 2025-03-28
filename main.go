@@ -14,7 +14,8 @@ func main() {
 		Addr:    ":" + port,
 		Handler: mux,
 	}
-	mux.Handle("/", http.FileServer(http.Dir(filepathRoot)))
+	mux.Handle("/app/", http.StripPrefix("/app", http.FileServer(http.Dir(filepathRoot))))
+	mux.HandleFunc("/healthz", handlerReadiness)
 
 	log.Printf("Serving files from %s on port: %s\n", filepathRoot, port)
 	log.Fatal(server.ListenAndServe())
